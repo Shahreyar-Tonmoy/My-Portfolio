@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+import { HelmetProvider } from 'react-helmet-async';
 
 import './index.css'
 import {
@@ -10,8 +11,10 @@ import { PortfolioProvider } from './context/PortfolioContext.jsx';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <PortfolioProvider>
-      <RouterProvider router={Routes} />
-    </PortfolioProvider>
+    <HelmetProvider>
+      <PortfolioProvider>
+        <RouterProvider router={Routes} />
+      </PortfolioProvider>
+    </HelmetProvider>
   </React.StrictMode>,
 )
