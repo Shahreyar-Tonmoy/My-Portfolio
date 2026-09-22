@@ -18,7 +18,7 @@ import icon13 from '../assets/Icons/13.png';
 import icon14 from '../assets/Icons/14.png';
 
 // eslint-disable-next-line react-refresh/only-export-components
-export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+export const API_BASE_URL = import.meta.env.VITE_API_URL || 'my-portfolio-backend-lovat.vercel.app';
 
 // Helper to resolve static server uploads, CDN URLs, and local assets safely
 // eslint-disable-next-line react-refresh/only-export-components

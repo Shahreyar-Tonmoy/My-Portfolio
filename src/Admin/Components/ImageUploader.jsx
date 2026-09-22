@@ -1,50 +1,60 @@
-import { useState, useRef } from 'react';
-import axios from 'axios';
-import { FiUploadCloud, FiCheck, FiCopy, FiAlertCircle, FiLink } from 'react-icons/fi';
-import { API_BASE_URL, resolveAssetUrl } from '../../context/PortfolioContext';
+import { useState, useRef } from "react";
+import axios from "axios";
+import {
+  FiUploadCloud,
+  FiCheck,
+  FiCopy,
+  FiAlertCircle,
+  FiLink,
+} from "react-icons/fi";
+import { API_BASE_URL, resolveAssetUrl } from "../../context/PortfolioContext";
 
-const ImageUploader = ({ onUploadSuccess, currentImage = '', label = 'Upload Image (ImgBB)' }) => {
+const ImageUploader = ({
+  onUploadSuccess,
+  currentImage = "",
+  label = "Upload Image (ImgBB)",
+}) => {
   const [isUploading, setIsUploading] = useState(false);
   const [preview, setPreview] = useState(currentImage);
   const [copied, setCopied] = useState(false);
-  const [manualUrl, setManualUrl] = useState('');
-  const [error, setError] = useState('');
+  const [manualUrl, setManualUrl] = useState("");
+  const [error, setError] = useState("");
   const fileInputRef = useRef(null);
 
   const handleFileSelect = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (!file.type.startsWith('image/')) {
-      setError('Please select a valid image file (PNG, JPG, WebP, GIF)');
+    if (!file.type.startsWith("image/")) {
+      setError("Please select a valid image file (PNG, JPG, WebP, GIF)");
       return;
     }
 
     if (file.size > 10 * 1024 * 1024) {
-      setError('Image size exceeds 10MB limit.');
+      setError("Image size exceeds 10MB limit.");
       return;
     }
 
-    setError('');
+    setError("");
     setIsUploading(true);
 
     // Create instant local preview while uploading
     const localUrl = URL.createObjectURL(file);
     setPreview(localUrl);
 
-    const token = localStorage.getItem('portfolio_token');
-    const apiKey = localStorage.getItem('portfolio_imgbb_key') || '';
+    const token = localStorage.getItem("portfolio_token");
+    const apiKey = localStorage.getItem("portfolio_imgbb_key") || "";
 
     // Step 1: Try uploading via backend server API
     try {
       const formData = new FormData();
-      formData.append('image', file);
+      formData.append("image", file);
 
       const headers = {
-        'Content-Type': 'multipart/form-data',
+        "Content-Type": "multipart/form-data",
       };
-      if (token) headers['Authorization'] = `Bearer ${token}`;
-      if (apiKey) headers['x-imgbb-key'] = apiKey;
+      if (token) headers["Authorization"] = `Bearer ${token}`;
+      if (apiKey) headers["x-imgbb-key"] = apiKey;
 
       const res = await axios.post(`${API_BASE_URL}/api/upload`, formData, {
         headers,
@@ -61,18 +71,18 @@ const ImageUploader = ({ onUploadSuccess, currentImage = '', label = 'Upload Ima
         return;
       }
     } catch (backendErr) {
-      console.warn('Backend upload attempt failed:', backendErr.message);
+      console.warn("Backend upload attempt failed:", backendErr.message);
 
       // Step 2: If backend is offline or failed, attempt direct client upload to ImgBB
       if (apiKey) {
         try {
           const directForm = new FormData();
-          directForm.append('image', file);
+          directForm.append("image", file);
 
           const directRes = await axios.post(
             `https://api.imgbb.com/1/upload?key=${apiKey}`,
             directForm,
-            { timeout: 35000 }
+            { timeout: 35000 },
           );
 
           if (directRes.data?.success && directRes.data.data?.url) {
@@ -85,19 +95,19 @@ const ImageUploader = ({ onUploadSuccess, currentImage = '', label = 'Upload Ima
             return;
           }
         } catch (directErr) {
-          console.error('Direct ImgBB upload error:', directErr);
+          console.error("Direct ImgBB upload error:", directErr);
         }
       }
 
       // Step 3: Provide friendly diagnostic message
-      if (backendErr.code === 'ERR_NETWORK' || !backendErr.response) {
+      if (backendErr.code === "ERR_NETWORK" || !backendErr.response) {
         setError(
-          'Backend server is offline (connection refused to http://localhost:5000). Please ensure your backend is running with "npm run server" in a terminal, or set your ImgBB API key in Settings.'
+          'Backend server is offline (connection refused to my-portfolio-backend-lovat.vercel.app). Please ensure your backend is running with "npm run server" in a terminal, or set your ImgBB API key in Settings.',
         );
       } else {
         setError(
           backendErr.response?.data?.message ||
-            'Upload failed. Please ensure the backend server is running or add your ImgBB API key in Settings.'
+            "Upload failed. Please ensure the backend server is running or add your ImgBB API key in Settings.",
         );
       }
     } finally {
@@ -113,8 +123,8 @@ const ImageUploader = ({ onUploadSuccess, currentImage = '', label = 'Upload Ima
     if (onUploadSuccess) {
       onUploadSuccess(url);
     }
-    setManualUrl('');
-    setError('');
+    setManualUrl("");
+    setError("");
   };
 
   const handleCopy = () => {
@@ -136,8 +146,8 @@ const ImageUploader = ({ onUploadSuccess, currentImage = '', label = 'Upload Ima
           onClick={() => fileInputRef.current?.click()}
           className={`flex-1 w-full border-2 border-dashed rounded-xl p-5 text-center cursor-pointer transition-all flex flex-col items-center justify-center min-h-[120px] ${
             isUploading
-              ? 'border-emerald-500 bg-emerald-500/10'
-              : 'border-white/10 hover:border-emerald-500/50 bg-slate-900/60 hover:bg-slate-900/90'
+              ? "border-emerald-500 bg-emerald-500/10"
+              : "border-white/10 hover:border-emerald-500/50 bg-slate-900/60 hover:bg-slate-900/90"
           }`}
         >
           <input
@@ -151,12 +161,16 @@ const ImageUploader = ({ onUploadSuccess, currentImage = '', label = 'Upload Ima
           {isUploading ? (
             <div className="flex flex-col items-center gap-2">
               <div className="w-8 h-8 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin" />
-              <span className="text-xs font-mono text-emerald-400">Uploading to ImgBB CDN...</span>
+              <span className="text-xs font-mono text-emerald-400">
+                Uploading to ImgBB CDN...
+              </span>
             </div>
           ) : (
             <div className="flex flex-col items-center gap-1.5 text-slate-400 hover:text-slate-200">
               <FiUploadCloud className="text-3xl text-emerald-400" />
-              <span className="text-xs font-semibold">Click or drag image to upload</span>
+              <span className="text-xs font-semibold">
+                Click or drag image to upload
+              </span>
               <span className="text-[10px] font-mono text-slate-500">
                 Directly hosted via ImgBB API (PNG, JPG, WebP up to 10MB)
               </span>
@@ -188,7 +202,11 @@ const ImageUploader = ({ onUploadSuccess, currentImage = '', label = 'Upload Ima
                 className="p-1.5 rounded bg-slate-800 hover:bg-emerald-500/20 text-slate-300 hover:text-emerald-400 border border-white/10 cursor-pointer"
                 title="Copy Image URL"
               >
-                {copied ? <FiCheck className="text-emerald-400 text-xs" /> : <FiCopy className="text-xs" />}
+                {copied ? (
+                  <FiCheck className="text-emerald-400 text-xs" />
+                ) : (
+                  <FiCopy className="text-xs" />
+                )}
               </button>
             </div>
           </div>
