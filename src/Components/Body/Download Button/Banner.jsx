@@ -1,66 +1,164 @@
-/* eslint-disable react/jsx-no-undef */
-/* eslint-disable react/no-unescaped-entities */
+import { useMemo } from "react";
 import { TypeAnimation } from "react-type-animation";
-import codeImg from "../../../assets/code1.png"
-
+import { FiDownload, FiArrowRight, FiCheckCircle } from "react-icons/fi";
+import { Link } from "react-scroll";
 import pdf from '../../../assets/Md-Mubtashim-Shahreyar-Tonmoy.pdf';
+import Hero3DCanvas from "../../Three/Hero3DCanvas";
+import { usePortfolio, API_BASE_URL } from "../../../context/PortfolioContext";
 
 const Banner = () => {
-    return (
-        <div>
-            <div className="lg:flex mx-5 lg:h-[85vh]  justify-between  items-center  ">
+  const { profile } = usePortfolio();
 
-                <div data-aos="fade"
-                    data-aos-easing="linear"
-                    data-aos-duration="2500" className="flex-1  lg:ml-20">
-                    <h1 className="lg:text-5xl text-2xl mt-10 lg:mt-0 text-white   font-bold">Crafting Outstanding <br /> Web Experiences <br /> With <span className="bg-gradient-to-r font-bold  from-green-700  to-[#1d419d] inline-block text-transparent bg-clip-text"><TypeAnimation
-                        sequence={['Shahreyar Tonmoy', 2000, ""]}
+  const typeSequence = useMemo(() => {
+    const roles = profile?.typewriterRoles?.length
+      ? profile.typewriterRoles
+      : [
+          "Front-End Developer",
+          "React.js Specialist",
+          "Full-Stack Developer",
+          "MERN Stack Engineer",
+        ];
+    return roles.flatMap((role) => [role, 2400]);
+  }, [profile?.typewriterRoles]);
 
-                        repeat={Infinity}
-                    /></span> </h1>
-                    <p className="text-slate-400 lg:pr-28 mt-7"><TypeAnimation
-                        sequence={[`←! I'm Shahreyar Tonmoy, a passionate front-end developer with an ability for turning imaginative  concepts into functional and attractive web applications.I venture on excursions to develop complete digital experiences using a combination of inspiration and technical expertise. →`, 2000, ""]}
+  const resumeHref = profile?.resumeUrl
+    ? profile.resumeUrl.startsWith('http')
+      ? profile.resumeUrl
+      : `${API_BASE_URL}${profile.resumeUrl}`
+    : pdf;
 
-                        repeat={Infinity}
-                    />
+  return (
+    <section
+      id="BannerId"
+      className="relative min-h-[calc(100vh-60px)] flex items-center justify-center pt-24 pb-16 lg:pt-28 lg:pb-24 overflow-hidden"
+    >
+      {/* Background Ambient Radial Glow */}
+      
 
-                    </p>
-
-                    <div className="mt-5">
-                        <a href={pdf} download="Resume">
-
-                            <button className="btn btn-success text-white">Download Resume
-                                <svg xmlns="http://www.w3.org/2000/svg" height={16} width={16} viewBox="0 0 512 512"><path d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V274.7l-73.4-73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0l128-128c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L288 274.7V32zM64 352c-35.3 0-64 28.7-64 64v32c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V416c0-35.3-28.7-64-64-64H346.5l-45.3 45.3c-25 25-65.5 25-90.5 0L165.5 352H64zm368 56a24 24 0 1 1 0 48 24 24 0 1 1 0-48z" /></svg>
-
-                            </button>
-                        </a>
-                    </div>
-                </div>
-
-
-
-                <div data-aos="fade-down"
-                    data-aos-easing="linear"
-                    data-aos-duration="2000" className="lg:flex-1 lg:ml-20 ">
-
-
-                    <div className="card mt-16 lg:mt-0 lg:w-[600px] bg-gradient-to-b from-[#0B1121] to-[#07472E] shadow-xl">
-                        <figure className="px-20 py-5">
-                            <h2 className=" lg:mb-52 text-slate-400 font-semibold">Introduce.js</h2>
-                            <div className="divider bg-white lg:divider-horizontal"></div>
-                            <img src={codeImg} alt="Shoes" className="rounded-xl bg-gradient-to-b to-[#0B1121] from-[#07472E]" />
-                        </figure>
-
-
-                    </div>
-
-
-
-                </div>
-
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
+        <div className="grid lg:grid-cols-12 gap-10 lg:gap-8 items-center">
+          
+          {/* Left Column: Introduction, Headline, Typist, Actions */}
+          <div className="lg:col-span-7 flex flex-col items-start text-left">
+            
+            {/* Status Pill */}
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-xs text-zinc-300 mb-6 backdrop-blur-xl shadow-sm">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+              </span>
+              <span className="font-medium tracking-wide">
+                Available for Full-Stack Opportunities
+              </span>
             </div>
+
+            {/* Headline */}
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.12]">
+              Engineering Modern <br />
+              <span className="text-gradient-brand">
+                Web Experiences
+              </span>
+            </h1>
+
+            {/* Typewriter Role Line */}
+            <div className="mt-4 text-lg sm:text-xl font-medium text-zinc-300 flex items-center gap-2 flex-wrap">
+              <span className="text-indigo-400 font-mono font-bold">&gt;</span>
+              <span className="text-zinc-400">Specializing as a</span>
+              <span className="text-white font-semibold underline decoration-indigo-500/60 decoration-2 underline-offset-4">
+                {typeSequence.length > 0 && (
+                  <TypeAnimation
+                    key={typeSequence.join('-')}
+                    sequence={typeSequence}
+                    wrapper="span"
+                    speed={50}
+                    repeat={Infinity}
+                  />
+                )}
+              </span>
+            </div>
+
+            {/* Concise Bio */}
+            <p className="mt-5 text-sm sm:text-base text-zinc-400 max-w-xl leading-relaxed font-light">
+              Hi, I&apos;m <strong className="text-zinc-100 font-medium">{profile?.name || "Shahreyar Tonmoy"}</strong>. {profile?.bio || "I build high-performance React frontends, scalable Node.js/Express APIs, and robust MongoDB architectures with pixel-perfect design and modern web standards."}
+            </p>
+
+            {/* Action CTAs */}
+            <div className="mt-8 flex flex-wrap items-center gap-3.5 w-full sm:w-auto">
+              <Link
+                to="ProjectsId"
+                smooth={true}
+                offset={-90}
+                duration={600}
+                className="cursor-pointer inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full text-xs sm:text-sm font-semibold text-white bg-gradient-to-r from-indigo-500 via-indigo-600 to-violet-600 hover:from-indigo-400 hover:to-violet-500 shadow-glow-indigo transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+              >
+                <span>Explore Work</span>
+                <FiArrowRight className="text-sm transition-transform group-hover:translate-x-0.5" />
+              </Link>
+
+              <a
+                href={resumeHref}
+                target="_blank"
+                rel="noreferrer"
+                download="Md-Mubtashim-Shahreyar-Tonmoy-Resume.pdf"
+                className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full text-xs sm:text-sm font-medium text-zinc-200 hover:text-white bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] hover:border-white/[0.15] backdrop-blur-md transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+              >
+                <FiDownload className="text-sm" />
+                <span>Resume</span>
+              </a>
+
+              <Link
+                to="ContactId"
+                smooth={true}
+                offset={-90}
+                duration={600}
+                className="cursor-pointer inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full text-xs sm:text-sm font-medium text-zinc-400 hover:text-white hover:bg-white/[0.04] transition-colors"
+              >
+                <span>Get In Touch</span>
+              </Link>
+            </div>
+
+            {/* Clean Live Metrics Strip */}
+            <div className="mt-10 pt-6 border-t border-white/[0.08] grid grid-cols-3 gap-4 sm:gap-8 w-full max-w-lg">
+              <div>
+                <div className="text-xl sm:text-2xl font-bold text-white font-mono">
+                  {profile?.experienceYears || "01+"}
+                </div>
+                <div className="text-[11px] text-zinc-400 uppercase tracking-wider mt-0.5">
+                  Years Exp.
+                </div>
+              </div>
+
+              <div>
+                <div className="text-xl sm:text-2xl font-bold text-white font-mono">
+                  {profile?.projectsCount || "12+"}
+                </div>
+                <div className="text-[11px] text-zinc-400 uppercase tracking-wider mt-0.5">
+                  Projects Built
+                </div>
+              </div>
+
+              <div>
+                <div className="text-xl sm:text-2xl font-bold text-indigo-400 font-mono flex items-center gap-1">
+                  <span>{profile?.dedicationPct || "100%"}</span>
+                  <FiCheckCircle className="text-indigo-400 text-base hidden sm:inline" />
+                </div>
+                <div className="text-[11px] text-zinc-400 uppercase tracking-wider mt-0.5">
+                  Satisfaction
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          {/* Right Column: Animated Developer Portrait Showcase */}
+          <div className="lg:col-span-5 flex items-center justify-center w-full">
+            <Hero3DCanvas />
+          </div>
+
         </div>
-    );
+      </div>
+    </section>
+  );
 };
 
 export default Banner;
